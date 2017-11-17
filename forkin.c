@@ -7,18 +7,21 @@
 int main(){
   printf("Before Fork\n");
   int f = fork();
-  fork();
-  if (f == 0){
-    printf("Child PID : %d \n", getpid());
-    srand(time(NULL));
-    int r = rand() % 15 + 5;
-    printf("%d \n", r);
-    sleep(1);
-    
+  if (!f){
+    fork();
+  }
+  if (f==0){
+    srand(getpid());
+    int r = rand() % 16 + 5;
+    printf("Child PID : %d. I will sleep for %d seconds\n", getpid(), r);
+    sleep(r);
+    printf("Child %d is finished\n", getpid());
+    exit(r);
   }
   else{
-    int x = 0;
-    wait(&x);
+    int status = wait(&status);
+    printf("Child %d is done sleeping for %d seconds\n", status, WEXITSTATUS(&status));
+    printf("Parent %d is done\n", getpid());
   }
   return 0;
   
